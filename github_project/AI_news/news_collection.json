@@ -1,0 +1,717 @@
+{
+  "name": "news_collection",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -784,
+        144
+      ],
+      "id": "e265db5d-d15d-45e1-8576-28cceb64b3d3",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "maxItems": 6
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        0,
+        208
+      ],
+      "id": "5cf0fd7f-9152-47e7-a719-caf0b9d9fb94",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "97c0557b-3abf-4635-bdd1-d0b720a98130",
+              "name": "标题",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "971f2d29-8937-44c2-bbc4-a2a5cbb12c04",
+              "name": "内容",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            },
+            {
+              "id": "4ba7c3b7-7dae-42c2-b991-a341b2e534ba",
+              "name": "日期",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "32b4f49f-1e7b-4e30-80a7-e0b7abe55220",
+              "name": "链接",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "177bd880-c4f2-4484-bdc4-4f299f65a305",
+              "name": "媒体",
+              "value": "36氪",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        208
+      ],
+      "id": "dc1e8024-172a-4971-9537-366123eea923",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "authentication": "feishuOauth2Api",
+        "resource": "bitable",
+        "operation": "bitable:table:record:add",
+        "app_toke": "GRLXbwooFai2AvsgaRTcDZTsnVg",
+        "table_id": "tblK9Z5i9Hsy7SPK",
+        "body": "={\"fields\":{\n  \"标题\":\"{{ $json['标题'] }}\",\n  \"日期\":\"{{ new Date($json['日期']).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false }).replace(/\\//g, '-').replace(',', '') }}\",\n  \"内容\":\"{{$json['内容']\n  .replace(/<[^>]+>/g, '')\n  .replace(/[^\\p{L}\\p{N}\\s]/gu, '')\n  .replace(/[\\r\\n\\t]/g, ' ')\n}}\"\n,\n\"链接\": {\n  \"text\": \"AI新闻原文\",\n  \"link\": \"{{ $json[\"链接\"].replace(/\\n/g, \"\") }}\"\n},\n\"媒体\":\"{{ $json['媒体'] }}\"\n}}"
+      },
+      "type": "n8n-nodes-feishu-lite.feishuNode",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        304
+      ],
+      "id": "5b32822c-24f7-49fe-b614-75126bf5973f",
+      "name": "Feishu Node",
+      "credentials": {
+        "feishuOauth2Api": {
+          "id": "U799ZpHPvZcz2ixe",
+          "name": "Feishu account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c12a8604-4cf6-4450-b62a-34efc6041c92",
+              "name": "标题",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "41a62bce-c755-4cc2-9beb-05c33146fa8d",
+              "name": "内容",
+              "value": "={{ $json['content:encodedSnippet'] }}",
+              "type": "string"
+            },
+            {
+              "id": "65541a9d-7041-41ec-8b51-87cf75b76554",
+              "name": "日期",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "885000e0-7cf7-45e1-8757-ced1cd54fc00",
+              "name": "链接",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "3b253c13-45ff-4fbc-a12f-70e3f09c815c",
+              "name": "媒体",
+              "value": "新智元",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        0
+      ],
+      "id": "84e4a67f-8459-4e44-9cce-07e2258fd023",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4a6f9f45-3c11-4524-9be5-f730b56f17f3",
+              "name": "标题",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "f68170aa-2ca3-4e5b-a3cd-6de9caf18bc7",
+              "name": "日期",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "de78fd6b-2ee0-4d0e-9c62-7bc7fcff3f32",
+              "name": "内容",
+              "value": "={{ $json['content:encodedSnippet'] }}",
+              "type": "string"
+            },
+            {
+              "id": "92d70c7f-03ce-4608-bad1-41c7fae5f4a4",
+              "name": "链接",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "4bccfc6b-c914-47fd-a073-049e0ab52234",
+              "name": "媒体",
+              "value": "腾讯科技",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        400
+      ],
+      "id": "33e38f75-4d23-4f43-8424-56a85c215c3c",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "maxItems": 6
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        0,
+        608
+      ],
+      "id": "01cf4e91-c642-44ae-9a0d-97e7cbb0edb2",
+      "name": "Limit1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a45690cf-ad3c-45eb-b247-573cbeb33085",
+              "name": "日期",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "6ab5382e-0ab1-4f1f-a24f-37558243d508",
+              "name": "标题",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "c36ff096-9fa6-46f1-9b19-610887b9eed7",
+              "name": "内容",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            },
+            {
+              "id": "8af9729f-fd49-4063-a45d-fe381ac46654",
+              "name": "链接",
+              "value": "={{ $json.guid }}",
+              "type": "string"
+            },
+            {
+              "id": "804fa287-05c3-497e-be0e-b7ee2e3ef13b",
+              "name": "媒体",
+              "value": "量子位",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        608
+      ],
+      "id": "d4b0e566-545e-4d53-9d40-bef089d43442",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "url": "https://plink.anyfeeder.com/weixin/AI_era",
+        "options": {
+          "ignoreSSL": true
+        }
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "10449038-e58c-41b2-b65e-bb9ade4434a8",
+      "name": "xinzhiyuan",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "url": "https://plink.anyfeeder.com/weixin/qqtech",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        400
+      ],
+      "id": "b43d1d77-71a8-4d91-842b-557da9957393",
+      "name": "tengxunkeji",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "url": "https://www.qbitai.com/feed",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        -224,
+        608
+      ],
+      "id": "844e3175-1dbd-456c-a75a-ffc1833241bd",
+      "name": "liangziwei",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a291383a-2989-4e4f-bf9a-34a46c06c3d8",
+              "leftValue": "={{ new Date($json[\"日期\"]).toISOString().slice(0,10) }}\n",
+              "rightValue": "={{ new Date().toISOString().slice(0,10) }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        528,
+        352
+      ],
+      "id": "514b0b9b-8b77-4978-8ca2-0117ebf32dff",
+      "name": "filter_today"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -704,
+        480
+      ],
+      "id": "0f0cb01b-3319-4a27-8a7e-578173434751",
+      "name": "Schedule Trigger1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=把你收到的新闻信息都整理成干净的格式，内容需要总结为摘要，以下是新闻：\n 标题 ：{{ $json['标题'] }} 内容：{{ $json['内容'] }} 日期：{{ $json['日期'] }} 链接：{{ $json['链接'] }} 媒体：{{ $json['媒体'] }}",
+        "hasOutputParser": true,
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        752,
+        352
+      ],
+      "id": "a2a50842-55b5-400a-91b5-b73a7775277a",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4899cbc9-b256-4378-b030-5ed9c4b9f491",
+              "name": "标题",
+              "value": "={{ $json.output['标题'] }}",
+              "type": "string"
+            },
+            {
+              "id": "55f35fb8-e5dc-4e29-be42-d04d8a5ddf38",
+              "name": "内容",
+              "value": "={{ $json.output['内容'] }}",
+              "type": "string"
+            },
+            {
+              "id": "7cfb38ff-e2fc-4d06-b3ca-74b6018f80f0",
+              "name": "日期",
+              "value": "={{ $json.output['日期'] }}",
+              "type": "string"
+            },
+            {
+              "id": "dbaf6e9c-1e89-485e-ac3e-dd5b94acc51a",
+              "name": "链接",
+              "value": "={{ $json.output['媒体'] }}",
+              "type": "string"
+            },
+            {
+              "id": "21625050-7ccd-48a3-834b-cab3e03f833f",
+              "name": "媒体",
+              "value": "={{ $json.output['媒体'] }}",
+              "type": "string"
+            },
+            {
+              "id": "31557d05-9913-47d6-9776-21b9ada3a7f8",
+              "name": "日期",
+              "value": "={{ $json.output['日期'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        304
+      ],
+      "id": "784bbee3-2bf6-412f-83e2-37022a05cb8a",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n    \"标题\":\"xxxx\",\n\t\"日期\": \"\",\n\t\"内容\": \"国内第一个 ai 大模型诞生了\",\n  \"媒体\":\" 国内媒体\",\n  \"链接\":\"http://www.baidu.com\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        560
+      ],
+      "id": "313d0ff7-97d2-48b2-96b6-c95070278b59",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "model": "deepseek-v4-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        640,
+        560
+      ],
+      "id": "b8267963-e221-4194-8a22-c1914ecc107f",
+      "name": "DeepSeek Chat Model",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "KE7lrTXNWBHGAtUi",
+          "name": "DeepSeek account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://plink.anyfeeder.com/36kr",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        -224,
+        208
+      ],
+      "id": "218c7f90-21ac-42c2-ba45-7900cace8111",
+      "name": "36ke",
+      "alwaysOutputData": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "xinzhiyuan",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "36ke",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "tengxunkeji",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "liangziwei",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "filter_today",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "filter_today",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "filter_today",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "filter_today",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "xinzhiyuan": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tengxunkeji": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "liangziwei": {
+      "main": [
+        [
+          {
+            "node": "Limit1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filter_today": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "xinzhiyuan",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "36ke",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "tengxunkeji",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "liangziwei",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Feishu Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "36ke": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "Asia/Shanghai",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "timeSavedPerExecution": 1
+  },
+  "versionId": "48680cc3-8f3b-4b10-8456-56ad752f5193",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8d20c0115283ba90f44c03769a7df32984030f794634aeb105319a0d1ef5854a"
+  },
+  "nodeGroups": [],
+  "id": "5TZbVErX1z367CyI",
+  "tags": []
+}

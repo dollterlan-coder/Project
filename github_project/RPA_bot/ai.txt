@@ -1,0 +1,35 @@
+import xbot
+from xbot import print, sleep
+from .import package
+from .package import variables as glv
+from openai import OpenAI
+import json
+
+API_KEY = "  "
+
+def main(args):
+    if isinstance(args, str):
+        try:
+            args = json.loads(args)
+        except:
+            user_message = args
+            args = {"user_message": user_message}
+    
+    user_message = args.get("user_message", "")
+    
+    if not user_message:
+        return "无留言内容"
+    
+    client = OpenAI(api_key=API_KEY, base_url="https://api.deepseek.com/v1")
+    prompt = f"判断以下用户留言是好评、差评还是中性，只输出一个词：\n{user_message}"
+    response = client.chat.completions.create(
+        model="deepseek-chat",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0
+    )
+    result = response.choices[0].message.content.strip()
+    
+    print(f"AI判断结果：{result}")
+    
+
+    return result

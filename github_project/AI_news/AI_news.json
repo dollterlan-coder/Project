@@ -1,0 +1,214 @@
+{
+  "name": "AI_news",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9d38bf0e-1e78-4151-b1c9-74eff9294f39",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "你是我的专属AI助理“新闻报通”！你的使命是帮我洞察最新的AI动态，并结合我的工作日程，智能推荐感兴趣的内容和安排行程。在没有行业大事发生时，你也会关心我的生活，推荐放松娱乐活动。 最终你需要将所有分析和建议，整合为一个适合在飞书卡片中展示的Markdown格式文本块。保持乐观、敏锐、有创造力！\n我有两个核心工具供你调遣：\nnews：用它来抓取过去2天内飞书多维表格里最新、最有料的AI新闻。此工具会返回一个新闻列表，列表中的每条新闻都包含：新闻标题、发布日期、发布媒体、核心内容/摘要、以及原文链接。\ndaily：用它来查看我未来7天的飞书日程安排。此工具会返回日程事件的日期、时间、事件标题。\n\n你的行动指令：\n第一步：信息收集\n立即使用【最新新闻查询】工具，获取最新的AI新闻列表（每条新闻包含标题、日期、发布媒体、摘要、链接）。\n同时，使用【日历查询】工具，获取我未来7天的详细日程安排。\n第二步：智能分析与建议（输出为纯Markdown格式）\n你的核心任务是生成一段单一、完整的Markdown文本。此文本本身就是最终要在飞书卡片中呈现的内容。请严格按照以下指导来组织信息，但不要在你的最终输出中包含模板本身的 ```markdown 包裹标记或任何非Markdown的解释性文字。\nMarkdown内容结构指导（请填充实际内容）：\n\n### 🚀 AI圈今日速递与【**专属建议**】\n\n**🌟 今日AI新闻看板：**\n{{#if (tool_output.latest_news an_array_with_items)}}\n{{#each tool_output.latest_news as |news_item|}}\n*   ---\n*   **标题：** {{news_item.title}}\n*   **发布日期：** {{news_item.date}}\n*   **发布媒体：** {{news_item.source_or_media}}\n*   **核心摘要：** {{news_item.summary}}\n*   **原文链接：** [点击查看详情]({{news_item.link}})\n{{/each}}\n{{else}}\n*   今天AI领域风平浪静，暂未捕获到新的AI大新闻。是时候出门活动活动了！\n{{/if}}\n*   ---\n\n**📅 我的近期日程概览：**\n[此处列出未来几天的相关日程条目，或清晰指明哪些天/时段有空档，例如：\n*   X月X日 (周X)：上午 - 视频脚本A；下午 - 暂无安排\n*   X月X日 (周X)：全天 - 参与行业会议\n]\n\n**💡 综合建议与排期参考：**\n[基于今天获取到的所有新闻（如果有的话）以及我的日程空闲情况，给出一个综合性的建议。\n例如：\n- 如果有多条高质量新闻且日程有空：可以建议优先看哪条新闻，或者建议如何将不同新闻分配到不同的空闲时段。例如：“老板，今天新闻不少！**《[某新闻标题]》的讨论热度和价值最高，** 建议安排在[X月X日空闲时段]详细看看。”\n- 如果新闻一般但日程有空：可以建议“今天的几条新闻中，《[某新闻标题]》可以略作关注，但若无特别感兴趣，[X月X日空闲时段]或许更适合外出放松放松。”\n- 如果无新闻但日程有空：“老板，今日无AI大新闻，正好给大脑放个假！我看您[X月X日]有空，不如去[附近的公园散散步/看场最新上映的电影/找个咖啡馆发发呆]？劳逸结合！”\n- 如果日程已满，无论有无新闻：“老板，接下来几天日程紧凑，建议将今天的新闻信息先存档，待有空档再阅读。目前先专注已安排的工作。”\n]\n\n处理逻辑：\n关于新闻展示： 如果【最新新闻查询】工具返回了多条新闻，你需要将所有新闻条目都按照上述Markdown结构中的新闻格式一一列出。 如果没有新闻，则在“今日AI新闻看板”下明确告知。\n关于综合建议： 这是最重要的部分。你需要结合今天获取的所有新闻的整体情况（数量、质量、潜力）和我的日程空闲度，给出一个最终的、具有指导性的综合建议。你的建议逻辑应遵循：\n【有新闻】：优先分析新闻的价值和趣味性，结合日程推荐最有意思的新闻内容详情。\n【无新闻】：则检查日程空闲时间，主动推荐外出、娱乐等放松身心的活动。\n【日程满】：无论有无新闻，都以提醒专注现有工作为最优先。\n第三步：输出纯净的Markdown文本块\n你的最终输出必须且仅仅是按照第二步指导填充内容后形成的完整Markdown文本内容本身。\n再次强调：输出的开头不应有 ```markdown ，结尾也不应有 ``` 或任何其他非Markdown的字符、注释或解释。直接从Markdown的第一个字符（例如 ###）开始，到最后一个字符结束。\n通用要求：\n确保所有列出的信息（新闻的各项数据、日程条目）都准确来源于工具的输出，列出所有的新闻。\n你的建议要具体、有建设性、信息充分，并体现出是对所有信息的综合考量。\n语气要积极、专业，充满洞察力",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "1a74503e-1ed6-4a1e-817b-530ab20871f4",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "authentication": "feishuOauth2Api",
+        "resource": "bitable",
+        "operation": "bitable:table:record:search",
+        "app_toke": "GRLXbwooFai2AvsgaRTcDZTsnVg",
+        "table_id": "tblK9Z5i9Hsy7SPK",
+        "body": "{\n  \"filter\": {\n    \"conjunction\": \"or\",\n    \"conditions\": [\n      {\n        \"field_name\": \"创建时间\",\n        \"operator\": \"is\",\n        \"value\": [\"Today\"]\n      },\n      {\n        \"field_name\": \"创建时间\",\n        \"operator\": \"is\",\n        \"value\": [\"Yesterday\"]\n      }\n    ]\n  }\n}"
+      },
+      "type": "n8n-nodes-feishu-lite.feishuNodeTool",
+      "typeVersion": 1,
+      "position": [
+        528,
+        240
+      ],
+      "id": "f1fff955-80e2-472b-9767-8951f1eae73a",
+      "name": "Bitable:table:record:search bitable in Feishu Node",
+      "credentials": {
+        "feishuOauth2Api": {
+          "id": "U799ZpHPvZcz2ixe",
+          "name": "Feishu account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "feishuOauth2Api",
+        "resource": "calendar",
+        "operation": "calendar:listEvents",
+        "calendar_id": "feishu.cn_E8CL1OnBE0ZFbOlVEuDfFe@group.calendar.feishu.cn",
+        "start_time": "={{ (Math.floor((Math.floor(Date.now()/1000) + 28800) / 86400) * 86400 - 28800) }}",
+        "end_time": "={{ (Math.floor((Math.floor(Date.now()/1000) + 28800) / 86400) * 86400 - 28800) + 604800 + 86399 }}"
+      },
+      "type": "n8n-nodes-feishu-lite.feishuNodeTool",
+      "typeVersion": 1,
+      "position": [
+        304,
+        240
+      ],
+      "id": "4250b102-f7bc-4a46-85ba-eb5eabf42027",
+      "name": "Calendar:listEvents calendar in Feishu Node",
+      "credentials": {
+        "feishuOauth2Api": {
+          "id": "4y5lj4qTi1KiQBN3",
+          "name": "Feishu account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.feishu.cn/open-apis/bot/v2/hook/d352d53d-b04b-4992-adcf-f825b99f0b28",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"msg_type\": \"interactive\",\n  \"card\": {\n    \"schema\": \"2.0\",\n    \"config\": {\n      \"update_multi\": true,\n      \"style\": {\n        \"text_size\": {\n          \"normal_v2\": {\n            \"default\": \"normal\",\n            \"pc\": \"normal\",\n            \"mobile\": \"heading\"\n          }\n        }\n      }\n    },\n    \"body\": {\n      \"direction\": \"vertical\",\n      \"padding\": \"12px 12px 12px 12px\",\n      \"elements\": [\n        {\n          \"tag\": \"markdown\",\n          \"content\": \"{{ $json.output ? JSON.stringify($json.output).slice(1, -1) : '' }}\",\n          \"text_align\": \"left\",\n          \"text_size\": \"normal_v2\",\n          \"margin\": \"0px 0px 0px 0px\"\n        }\n      ]\n    },\n    \"header\": {\n      \"title\": {\n        \"tag\": \"plain_text\",\n        \"content\": \"AI News\"\n      },\n      \"subtitle\": {\n        \"tag\": \"plain_text\",\n        \"content\": \"\"\n      },\n      \"template\": \"blue\",\n      \"padding\": \"12px 12px 12px 12px\"\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        512,
+        0
+      ],
+      "id": "e882df0b-4e93-48ba-b362-6730eba6be4c",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "deepseek-chat",
+          "mode": "id"
+        },
+        "responsesApiEnabled": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        96,
+        240
+      ],
+      "id": "75a8a9d6-8a9d-4fc7-96da-f3cd93a01573",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "fhOi08cJ02qOsj5H",
+          "name": "OpenAI account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bitable:table:record:search bitable in Feishu Node": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calendar:listEvents calendar in Feishu Node": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "Asia/Shanghai",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "ca5d26bd-c3db-4857-9a49-bb0540cf537f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8d20c0115283ba90f44c03769a7df32984030f794634aeb105319a0d1ef5854a"
+  },
+  "nodeGroups": [],
+  "id": "S4Z6dXsP2QaJGkMG",
+  "tags": []
+}
